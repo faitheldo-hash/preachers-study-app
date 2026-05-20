@@ -1,213 +1,151 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Preacher's Study Module</title>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0d0b07; }
-    strong { color: #c9a84c; }
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-track { background: #1a1610; }
-    ::-webkit-scrollbar-thumb { background: #b08c3c; border-radius: 3px; }
-    input::placeholder { color: rgba(176,140,60,0.28); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preachers Study Module</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d0b07;color:#e8dcc8;font-family:Georgia,serif;padding:20px}
+h1{font-size:26px;color:#f0e6cc;font-style:italic;margin:6px 0 0}
+.label{font-size:11px;letter-spacing:4px;color:#b08c3c;text-transform:uppercase}
+.header{border-bottom:1px solid rgba(180,140,60,0.4);padding-bottom:16px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center}
+.search-row{display:flex;gap:10px;margin-bottom:12px}
+#verse{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(180,140,60,0.4);color:#f0e6cc;padding:12px 16px;font-size:16px;font-family:Georgia,serif;font-style:italic;border-radius:4px;outline:none}
+.btn-study{background:rgba(176,140,60,0.2);border:1px solid rgba(176,140,60,0.6);color:#c9a84c;padding:12px 24px;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-family:Georgia,serif;border-radius:4px;cursor:pointer}
+.quick-verses{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.qv{background:transparent;border:1px solid rgba(176,140,60,0.25);color:rgba(200,170,100,0.5);padding:4px 12px;font-size:11px;cursor:pointer;border-radius:2px;font-family:Georgia,serif}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid rgba(180,140,60,0.2);margin-bottom:20px}
+.tab{padding:8px 12px;font-size:11px;letter-spacing:1px;text-transform:uppercase;font-family:Georgia,serif;cursor:pointer;border:none;border-bottom:2px solid transparent;background:transparent;color:rgba(200,170,100,0.45)}
+.tab.active{border-bottom:2px solid #b08c3c;background:rgba(176,140,60,0.15);color:#c9a84c}
+#content{background:rgba(255,255,255,0.02);border:1px solid rgba(180,140,60,0.15);border-radius:4px;padding:28px 32px;min-height:200px;line-height:1.9;font-size:15px;color:#ddd0b8}
+#content p{margin:4px 0}
+#content p.hl{margin:16px 0 6px}
+#content strong{color:#c9a84c}
+.footer{position:fixed;bottom:0;left:0;right:0;border-top:1px solid rgba(180,140,60,0.15);background:rgba(13,11,7,0.98);padding:9px 28px;display:flex;justify-content:space-between;align-items:center}
+.footer span{font-size:10px;color:rgba(176,140,60,0.35);letter-spacing:2px;text-transform:uppercase}
+</style>
 </head>
 <body>
-  <div id="root"></div>
-  <script type="text/babel">
-
-    const API_KEY = "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;
-
-    const SECTIONS = [
-      { id:"overview",     label:"Overview",              icon:"✦" },
-      { id:"greek",        label:"Greek Study",           icon:"α" },
-      { id:"hebrew",       label:"Hebrew & Aramaic",      icon:"א" },
-      { id:"connections",  label:"Scripture Connections", icon:"⛓" },
-      { id:"context",      label:"Historical Context",    icon:"⊕" },
-      { id:"culture",      label:"Culture & Setting",     icon:"◈" },
-      { id:"questions",    label:"Study Questions",       icon:"?" },
-      { id:"sermon",       label:"Sermon Seeds",          icon:"✿" },
-    ];
-
-    const VERSES = ["John 3:16","Romans 8:28","Psalm 23","Isaiah 53:5","Genesis 1:1","Matthew 5:1-12"];
-
-    const PROMPTS = {
-      overview:    (v) => `You are a world-class biblical scholar. Analyze "${v}": 1. **Scripture Text** - Full passage (ESV) 2. **Core Message** - Central truth 3. **Key Themes** - 3-5 themes 4. **Cross-References** - 4-6 related scriptures 5. **Theological Significance**`,
-      greek:       (v) => `You are a NT Greek scholar. For "${v}": 1. **Original Language** 2. **Key Words** - Greek word, Strong's number, meaning 3. **Grammatical Notes** 4. **Translation Nuances** 5. **Application**. Include Greek characters.`,
-      hebrew:      (v) => `You are a Hebrew/Aramaic scholar. For "${v}": 1. **Language ID** - Hebrew or Aramaic? 2. **Original Script** - Key phrases 3. **Word Studies** - Hebrew word, transliteration, Strong's, root meaning 4. **Verb Stems** - Qal/Niphal etc 5. **Translation Gaps**. Include Hebrew characters.`,
-      connections: (v) => `You are a biblical theologian. For "${v}": 1. **Literary Context** 2. **Book Connections** - 3-4 passages same book 3. **OT/NT Bridge** - 4-5 cross-testament refs 4. **Typological Links** 5. **Thematic Thread** - Genesis to Revelation 6. **Gospel Connection** 7. **Doctrinal Web**`,
-      context:     (v) => `You are a biblical historian. For "${v}": 1. **Date & Authorship** 2. **Historical Background** 3. **Political Climate** 4. **Literary Context** 5. **Original Audience** 6. **Archaeological Evidence** 7. **Geography**`,
-      culture:     (v) => `You are an Ancient Near Eastern expert. For "${v}": 1. **Cultural Setting** 2. **Jewish Customs** 3. **Social Structure** 4. **Economic Context** 5. **Geographic Setting** 6. **Figurative Language** 7. **Honor & Shame Culture** 8. **Modern Misconceptions**`,
-      questions:   (v) => `You are a Bible teacher. For "${v}": 1. **Observation** - 4 questions 2. **Interpretation** - 4 questions 3. **Application** - 4 questions 4. **Theological Deep-Dives** - 3 questions 5. **Small Group** - 4 questions 6. **Preacher Reflection** - 3 questions`,
-      sermon:      (v) => `You are a homiletics professor. For "${v}": 1. **3 Sermon Outlines** - topical/expository/narrative 2. **Illustrations** - 3 stories 3. **Opening Hooks** - 3 options 4. **Memorable Statements** - 5 one-liners 5. **Application** - 4 points 6. **Pitfalls** to avoid 7. **Call to Action** - 3 options`,
-    };
-
-    function App() {
-      const [scripture, setScripture] = React.useState("");
-      const [active, setActive] = React.useState("overview");
-      const [data, setData] = React.useState(null);
-      const [loading, setLoading] = React.useState(false);
-      const [text, setText] = React.useState("");
-      const [streaming, setStreaming] = React.useState(false);
-      const [ph, setPh] = React.useState(0);
-      const ref = React.useRef(null);
-
-      React.useEffect(() => {
-        const t = setInterval(() => setPh(p => (p+1) % VERSES.length), 2500);
-        return () => clearInterval(t);
-      }, []);
-
-      const fetchData = async (verse, section) => {
-        setLoading(true); setStreaming(true); setText("");
-        try {
-          const res = await fetch("https://api.anthropic.com/v1/messages", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-api-key": API_KEY,
-              "anthropic-version": "2023-06-01",
-              "anthropic-dangerous-direct-browser-access": "true"
-            },
-            body: JSON.stringify({
-              model: "claude-sonnet-4-20250514",
-              max_tokens: 1500,
-              messages: [{ role: "user", content: PROMPTS[section](verse) }]
-            })
-          });
-          const json = await res.json();
-          const result = json.content?.map(b => b.text||"").join("") || "Unable to load. Check your API key and billing.";
-          let i = 0;
-          const speed = Math.max(6, Math.floor(result.length/280));
-          const interval = setInterval(() => {
-            if (i < result.length) {
-              setText(result.slice(0, i+speed)); i += speed;
-              if (ref.current) ref.current.scrollTop = ref.current.scrollHeight;
-            } else {
-              setText(result); clearInterval(interval); setStreaming(false);
-              setData(prev => ({ ...prev, [section]: result }));
-            }
-          }, 16);
-        } catch(e) {
-          setText("Error: " + e.message); setStreaming(false);
-        }
-        setLoading(false);
-      };
-
-      const study = () => { if (!scripture.trim()) return; setData({}); fetchData(scripture.trim(), active); };
-      const switchSection = (s) => {
-        setActive(s);
-        if (!scripture.trim()) return;
-        if (data?.[s]) { setText(data[s]); setStreaming(false); }
-        else if (data) fetchData(scripture.trim(), s);
-      };
-
-      const format = (t) => {
-        if (!t) return null;
-        return t.split("\n").map((line,i) => {
-          if (!line.trim()) return <br key={i}/>;
-          const html = line.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>").replace(/\*([^*]+)\*/g,"<em>$1</em>");
-          const isH = line.match(/^\d+\.\s\*\*/) || line.match(/^\*\*[^*]+\*\*/);
-          const rtl = /[\u0590-\u05FF]/.test(line);
-          return <p key={i} style={{ margin:isH?"16px 0 6px":"4px 0", direction:rtl?"rtl":"ltr", fontSize:rtl?"17px":"15px", color:rtl?"#e8c97a":"#ddd0b8" }} dangerouslySetInnerHTML={{__html:html}}/>;
-        });
-      };
-
-      return (
-        <div style={{minHeight:"100vh",background:"#0d0b07",fontFamily:"Georgia,serif",color:"#e8dcc8"}}>
-
-          {/* Header */}
-          <div style={{borderBottom:"1px solid rgba(180,140,60,0.3)",padding:"20px 28px",display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(13,11,7,0.95)"}}>
-            <div>
-              <div style={{fontSize:"10px",letterSpacing:"4px",color:"#b08c3c",textTransform:"uppercase",marginBottom:"3px"}}>The Preacher's Lamp</div>
-              <div style={{fontSize:"24px",fontWeight:"700",color:"#f0e6cc",fontStyle:"italic"}}>Scripture Study Module</div>
-            </div>
-            <div style={{fontSize:"20px",color:"#b08c3c",opacity:0.5}}>✦ א α</div>
-          </div>
-
-          {/* Search */}
-          <div style={{padding:"24px 28px 0",maxWidth:"920px",margin:"0 auto"}}>
-            <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(180,140,60,0.4)",borderRadius:"4px",padding:"16px 20px",display:"flex",gap:"12px",alignItems:"center"}}>
-              <span style={{color:"#b08c3c"}}>✦</span>
-              <input value={scripture} onChange={e=>setScripture(e.target.value)} onKeyDown={e=>e.key==="Enter"&&study()}
-                placeholder={`e.g. ${VERSES[ph]}`}
-                style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#f0e6cc",fontSize:"16px",fontFamily:"Georgia,serif",fontStyle:"italic"}}/>
-              <button onClick={study} disabled={loading||streaming}
-                style={{background:"rgba(176,140,60,0.18)",border:"1px solid rgba(176,140,60,0.6)",color:"#c9a84c",padding:"9px 20px",cursor:loading||streaming?"not-allowed":"pointer",fontSize:"11px",letterSpacing:"2px",textTransform:"uppercase",fontFamily:"Georgia,serif",borderRadius:"2px"}}>
-                {loading?"Studying...":"Study"}
-              </button>
-            </div>
-            <div style={{display:"flex",gap:"7px",marginTop:"10px",flexWrap:"wrap"}}>
-              {VERSES.map(v=>(
-                <button key={v} onClick={()=>setScripture(v)}
-                  style={{background:"transparent",border:"1px solid rgba(176,140,60,0.2)",color:"rgba(200,170,100,0.45)",padding:"3px 10px",fontSize:"10px",cursor:"pointer",fontFamily:"Georgia,serif",borderRadius:"2px"}}>
-                  {v}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Main */}
-          <div style={{maxWidth:"920px",margin:"0 auto",padding:"24px 28px 80px"}}>
-
-            {/* Tabs */}
-            <div style={{display:"flex",flexWrap:"wrap",gap:"2px",borderBottom:"1px solid rgba(180,140,60,0.2)",marginBottom:"26px"}}>
-              {SECTIONS.map(s=>(
-                <button key={s.id} onClick={()=>switchSection(s.id)}
-                  style={{background:active===s.id?"rgba(176,140,60,0.15)":"transparent",border:"none",borderBottom:active===s.id?"2px solid #b08c3c":"2px solid transparent",color:active===s.id?"#c9a84c":"rgba(200,170,100,0.45)",padding:"9px 12px",cursor:"pointer",fontSize:"10px",letterSpacing:"1.2px",textTransform:"uppercase",fontFamily:"Georgia,serif",whiteSpace:"nowrap"}}>
-                  <span style={{marginRight:"4px"}}>{s.icon}</span>{s.label}
-                  {data?.[s.id]&&s.id!==active&&<span style={{marginLeft:"4px",color:"#b08c3c",fontSize:"7px"}}>●</span>}
-                </button>
-              ))}
-            </div>
-
-            {/* Empty state */}
-            {!data&&!loading&&(
-              <div style={{textAlign:"center",padding:"70px 20px",opacity:0.55}}>
-                <div style={{fontSize:"40px",marginBottom:"16px",color:"#b08c3c"}}>✦</div>
-                <p style={{fontSize:"16px",fontStyle:"italic",color:"#b08c3c",marginBottom:"5px"}}>"Thy word is a lamp unto my feet..."</p>
-                <p style={{fontSize:"11px",letterSpacing:"2px",textTransform:"uppercase",color:"rgba(176,140,60,0.5)"}}>Psalm 119:105</p>
-                <p style={{marginTop:"26px",fontSize:"13px",color:"rgba(200,170,100,0.4)",lineHeight:"2"}}>Enter any scripture above to begin your deep study.</p>
-              </div>
-            )}
-
-            {/* Content */}
-            {(text||loading)&&(
-              <div ref={ref} style={{background:"rgba(255,255,255,0.02)",border:"1px solid rgba(180,140,60,0.15)",borderRadius:"4px",padding:"28px 32px",maxHeight:"560px",overflowY:"auto",lineHeight:"1.95",fontSize:"15px",color:"#ddd0b8"}}>
-                {loading&&!text&&(
-                  <div style={{display:"flex",alignItems:"center",gap:"12px",color:"#b08c3c"}}>
-                    <span>✦</span><span style={{fontStyle:"italic",fontSize:"13px"}}>Searching the ancient texts...</span>
-                  </div>
-                )}
-                {format(text)}
-                {streaming&&<span style={{display:"inline-block",width:"2px",height:"14px",background:"#b08c3c",marginLeft:"2px",verticalAlign:"middle"}}/>}
-              </div>
-            )}
-
-            {data&&!data[active]&&!loading&&!text&&(
-              <div style={{textAlign:"center",padding:"55px 20px"}}>
-                <div style={{fontSize:"28px",color:"#b08c3c",marginBottom:"12px"}}>{SECTIONS.find(s=>s.id===active)?.icon}</div>
-                <p style={{fontStyle:"italic",color:"rgba(200,170,100,0.35)",fontSize:"13px"}}>Press Study to load {SECTIONS.find(s=>s.id===active)?.label.toLowerCase()}</p>
-              </div>
-            )}
-          </div>
-
-          {/* Footer */}
-          <div style={{position:"fixed",bottom:0,left:0,right:0,borderTop:"1px solid rgba(180,140,60,0.15)",background:"rgba(13,11,7,0.98)",padding:"9px 28px",display:"flex",alignItems:"center",justifyContent:"space-between",zIndex:20}}>
-            <span style={{fontSize:"10px",color:"rgba(176,140,60,0.35)",letterSpacing:"2px",textTransform:"uppercase"}}>Powered by Claude AI</span>
-            {scripture&&data&&<span style={{fontSize:"11px",color:"rgba(176,140,60,0.45)",fontStyle:"italic"}}>Studying: {scripture}</span>}
-            <span style={{fontSize:"10px",color:"rgba(176,140,60,0.35)"}}>{Object.keys(data||{}).length}/{SECTIONS.length} sections</span>
-          </div>
-
-        </div>
-      );
-    }
-
-    ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
-  </script>
+<div style="max-width:920px;margin:0 auto;padding-bottom:60px">
+<div class="header">
+<div>
+<div class="label">The Preachers Lamp</div>
+<h1>Scripture Study Module</h1>
+</div>
+<div style="font-size:20px;color:#b08c3c;opacity:0.5">* A a</div>
+</div>
+<div class="search-row">
+<input id="verse" type="text" placeholder="Enter scripture e.g. John 3:16" />
+<button class="btn-study" id="studyBtn">Study</button>
+</div>
+<div class="quick-verses">
+<button class="qv" data-verse="John 3:16">John 3:16</button>
+<button class="qv" data-verse="Genesis 1:1">Genesis 1:1</button>
+<button class="qv" data-verse="Psalm 23">Psalm 23</button>
+<button class="qv" data-verse="Isaiah 53:5">Isaiah 53:5</button>
+<button class="qv" data-verse="Romans 8:28">Romans 8:28</button>
+</div>
+<div class="tabs">
+<button class="tab active" data-tab="overview">Overview</button>
+<button class="tab" data-tab="greek">Greek</button>
+<button class="tab" data-tab="hebrew">Hebrew</button>
+<button class="tab" data-tab="connections">Connections</button>
+<button class="tab" data-tab="context">History</button>
+<button class="tab" data-tab="culture">Culture</button>
+<button class="tab" data-tab="questions">Questions</button>
+<button class="tab" data-tab="sermon">Sermon</button>
+</div>
+<div id="content">
+<div style="text-align:center;padding:40px 0;opacity:0.5">
+<div style="font-size:36px;color:#b08c3c;margin-bottom:12px">*</div>
+<p style="font-style:italic;color:#b08c3c">Thy word is a lamp unto my feet...</p>
+<p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(176,140,60,0.5);margin-top:4px">Psalm 119:105</p>
+<p style="margin-top:20px;font-size:13px;color:rgba(200,170,100,0.4)">Enter any scripture above and click Study</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<span>Powered by Claude AI</span>
+<span id="fv"></span>
+<span id="fc">0/8 sections</span>
+</div>
+<script>
+var KEY = "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;
+var tab = "overview";
+var verse = "";
+var cache = {};
+var prompts = {
+overview: function(v){ return "You are a biblical scholar. Analyze this scripture: " + v + ". Provide: 1. **Scripture Text** - Full passage in ESV. 2. **Core Message** - Central truth in 2-3 sentences. 3. **Key Themes** - 3-5 major themes. 4. **Cross-References** - 4-6 related scriptures. 5. **Theological Significance**."; },
+greek: function(v){ return "You are a NT Greek scholar. For this scripture: " + v + ". Provide: 1. **Original Language**. 2. **Key Words** - Greek characters, transliteration, Strongs number, meaning. 3. **Grammatical Notes**. 4. **Translation Nuances**. 5. **Application**."; },
+hebrew: function(v){ return "You are a Hebrew scholar. For this scripture: " + v + ". Provide: 1. **Language** - Hebrew or Aramaic. 2. **Original Script** - Key phrases in Hebrew. 3. **Word Studies** - Hebrew characters, transliteration, Strongs, root meaning. 4. **Verb Stems**. 5. **Translation Gaps**."; },
+connections: function(v){ return "You are a biblical theologian. For this scripture: " + v + ". Provide: 1. **Literary Context**. 2. **Book Connections** - 3-4 passages same book. 3. **OT and NT Bridge** - 4-5 cross-testament refs. 4. **Typological Links**. 5. **Thematic Thread** Genesis to Revelation. 6. **Gospel Connection**. 7. **Doctrinal Web**."; },
+context: function(v){ return "You are a biblical historian. For this scripture: " + v + ". Provide: 1. **Date and Authorship**. 2. **Historical Background**. 3. **Political Climate**. 4. **Literary Context**. 5. **Original Audience**. 6. **Archaeological Evidence**. 7. **Geography**."; },
+culture: function(v){ return "You are an Ancient Near Eastern expert. For this scripture: " + v + ". Provide: 1. **Cultural Setting**. 2. **Jewish Customs**. 3. **Social Structure**. 4. **Economic Context**. 5. **Geographic Setting**. 6. **Figurative Language**. 7. **Honor and Shame Culture**. 8. **Modern Misconceptions**."; },
+questions: function(v){ return "You are a Bible teacher. For this scripture: " + v + ". Create: 1. **Observation Questions** - 4 questions. 2. **Interpretation Questions** - 4 questions. 3. **Application Questions** - 4 questions. 4. **Theological Deep Dives** - 3 questions. 5. **Small Group Discussion** - 4 questions. 6. **Preacher Reflection** - 3 questions."; },
+sermon: function(v){ return "You are a homiletics professor. For this scripture: " + v + ". Provide: 1. **3 Sermon Outlines** - topical, expository, narrative. 2. **Illustrations** - 3 stories. 3. **Opening Hooks** - 3 options. 4. **Memorable Statements** - 5 one-liners. 5. **Application Points** - 4 modern applications. 6. **Pitfalls** to avoid. 7. **Call to Action** - 3 options."; }
+};
+function setContent(html){ document.getElementById("content").innerHTML = html; }
+function render(text){
+var lines = text.split("\n");
+var html = "";
+for(var i=0;i<lines.length;i++){
+var l = lines[i];
+if(!l.trim()){html+="<br>";continue;}
+var isH = /^\d+\.\s\*\*/.test(l)||/^\*\*[^*]+\*\*/.test(l);
+l = l.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
+l = l.replace(/\*([^*]+)\*/g,"<em>$1</em>");
+html += "<p class='"+(isH?"hl":"")+"'>"+l+"</p>";
+}
+setContent(html);
+}
+function load(v,s){
+setContent("<p style='color:#b08c3c;font-style:italic;padding:20px 0'>Searching the ancient texts...</p>");
+fetch("https://api.anthropic.com/v1/messages",{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+"x-api-key":KEY,
+"anthropic-version":"2023-06-01",
+"anthropic-dangerous-direct-browser-access":"true"
+},
+body:JSON.stringify({
+model:"claude-sonnet-4-20250514",
+max_tokens:1500,
+messages:[{role:"user",content:prompts[s](v)}]
+})
+}).then(function(r){return r.json();}).then(function(d){
+var t="";
+if(d.content){for(var i=0;i<d.content.length;i++){if(d.content[i].text)t+=d.content[i].text;}}
+if(!t)t="Unable to load. Check API key and billing at console.anthropic.com";
+cache[s]=t;
+render(t);
+document.getElementById("fv").textContent="Studying: "+v;
+document.getElementById("fc").textContent=Object.keys(cache).length+"/8 sections";
+}).catch(function(e){
+setContent("<p style='color:#f85149'>Error: "+e.message+"</p>");
+});
+}
+function switchTab(s){
+tab=s;
+document.querySelectorAll(".tab").forEach(function(b){b.classList.remove("active");});
+document.querySelector("[data-tab='"+s+"']").classList.add("active");
+if(verse){cache[s]?render(cache[s]):load(verse,s);}
+}
+function study(){
+var v=document.getElementById("verse").value.trim();
+if(!v)return;
+verse=v;cache={};
+load(v,tab);
+}
+document.getElementById("studyBtn").onclick = study;
+document.getElementById("verse").onkeydown = function(e){if(e.key==="Enter")study();};
+document.querySelectorAll(".qv").forEach(function(b){
+b.onclick=function(){document.getElementById("verse").value=this.getAttribute("data-verse");};
+});
+document.querySelectorAll(".tab").forEach(function(b){
+b.onclick=function(){switchTab(this.getAttribute("data-tab"));};
+});
+</script>
 </body>
 </html>
