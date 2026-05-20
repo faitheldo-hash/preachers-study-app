@@ -1,1 +1,17 @@
-Hello World
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Test</title>
+</head>
+<body style="background:#0d0b07; color:#e8dcc8; font-family:Georgia,serif; padding:40px;">
+<h2 style="color:#b08c3c;">Step 1 works!</h2>
+<button id="btn" style="padding:12px 24px; cursor:pointer; margin-top:20px;">Click Me</button>
+<p id="out" style="margin-top:20px;"></p>
+<script>
+document.getElementById("btn").onclick = function() {
+  document.getElementById("out").innerText = "JavaScript works!";
+};
+</script>
+</body>
+</html>
