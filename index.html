@@ -2,234 +2,52 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preachers Study Module</title>
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #0d0b07; color: #e8dcc8; font-family: Georgia, serif; padding: 20px; }
-h1 { font-size: 26px; color: #f0e6cc; font-style: italic; margin: 6px 0 0; }
-.label { font-size: 11px; letter-spacing: 4px; color: #b08c3c; text-transform: uppercase; }
-.header { border-bottom: 1px solid rgba(180,140,60,0.4); padding-bottom: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
-.search-row { display: flex; gap: 10px; margin-bottom: 12px; }
-#verse { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(180,140,60,0.4); color: #f0e6cc; padding: 12px 16px; font-size: 16px; font-family: Georgia, serif; font-style: italic; border-radius: 4px; outline: none; }
-.btn-study { background: rgba(176,140,60,0.2); border: 1px solid rgba(176,140,60,0.6); color: #c9a84c; padding: 12px 24px; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-family: Georgia, serif; border-radius: 4px; cursor: pointer; }
-.btn-study:hover { background: rgba(176,140,60,0.35); }
-.quick-verses { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
-.qv { background: transparent; border: 1px solid rgba(176,140,60,0.25); color: rgba(200,170,100,0.5); padding: 4px 12px; font-size: 11px; cursor: pointer; border-radius: 2px; font-family: Georgia, serif; }
-.qv:hover { border-color: rgba(176,140,60,0.6); color: #c9a84c; }
-.tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid rgba(180,140,60,0.2); margin-bottom: 20px; }
-.tab { padding: 8px 12px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-family: Georgia, serif; cursor: pointer; border: none; border-bottom: 2px solid transparent; background: transparent; color: rgba(200,170,100,0.45); }
-.tab:hover { color: #c9a84c; }
-.tab.active { border-bottom: 2px solid #b08c3c; background: rgba(176,140,60,0.15); color: #c9a84c; }
-#content { background: rgba(255,255,255,0.02); border: 1px solid rgba(180,140,60,0.15); border-radius: 4px; padding: 28px 32px; min-height: 200px; line-height: 1.9; font-size: 15px; color: #ddd0b8; }
-#content p { margin: 4px 0; }
-#content p.header-line { margin: 16px 0 6px; }
-#content strong { color: #c9a84c; }
-.empty { text-align: center; padding: 40px 0; opacity: 0.5; }
-.empty-icon { font-size: 36px; color: #b08c3c; margin-bottom: 12px; }
-.empty-verse { font-style: italic; color: #b08c3c; }
-.empty-ref { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(176,140,60,0.5); margin-top: 4px; }
-.empty-hint { margin-top: 20px; font-size: 13px; color: rgba(200,170,100,0.4); }
-.loading { color: #b08c3c; font-style: italic; padding: 20px 0; }
-.error { color: #f85149; padding: 10px 0; }
-.footer { position: fixed; bottom: 0; left: 0; right: 0; border-top: 1px solid rgba(180,140,60,0.15); background: rgba(13,11,7,0.98); padding: 9px 28px; display: flex; justify-content: space-between; align-items: center; }
-.footer span { font-size: 10px; color: rgba(176,140,60,0.35); letter-spacing: 2px; text-transform: uppercase; }
-</style>
+<title>API Test</title>
 </head>
-<body>
+<body style="background:#0d0b07; color:#e8dcc8; font-family:Georgia,serif; padding:40px;">
 
-<div style="max-width:920px; margin:0 auto; padding-bottom:60px;">
+<h2 style="color:#b08c3c; margin-bottom:20px;">API Key Test</h2>
+<p style="margin-bottom:20px; color:rgba(200,170,100,0.6);">Click the button to test if your API key works.</p>
 
-  <div class="header">
-    <div>
-      <div class="label">The Preachers Lamp</div>
-      <h1>Scripture Study Module</h1>
-    </div>
-    <div style="font-size:20px; color:#b08c3c; opacity:0.5;">&#10022; &#1488; &#945;</div>
-  </div>
+<button id="testBtn" style="background:rgba(176,140,60,0.2); border:1px solid rgba(176,140,60,0.6); color:#c9a84c; padding:12px 24px; font-size:14px; cursor:pointer; border-radius:4px;">
+  Test API Key
+</button>
 
-  <div class="search-row">
-    <input id="verse" type="text" placeholder="Enter scripture e.g. John 3:16" />
-    <button class="btn-study" id="studyBtn">Study</button>
-  </div>
-
-  <div class="quick-verses">
-    <button class="qv" data-verse="John 3:16">John 3:16</button>
-    <button class="qv" data-verse="Genesis 1:1">Genesis 1:1</button>
-    <button class="qv" data-verse="Psalm 23">Psalm 23</button>
-    <button class="qv" data-verse="Isaiah 53:5">Isaiah 53:5</button>
-    <button class="qv" data-verse="Romans 8:28">Romans 8:28</button>
-    <button class="qv" data-verse="Matthew 5:1-12">Matthew 5:1-12</button>
-  </div>
-
-  <div class="tabs">
-    <button class="tab active" data-tab="overview">&#10022; Overview</button>
-    <button class="tab" data-tab="greek">&#945; Greek</button>
-    <button class="tab" data-tab="hebrew">&#1488; Hebrew</button>
-    <button class="tab" data-tab="connections">&#9935; Connections</button>
-    <button class="tab" data-tab="context">&#8853; History</button>
-    <button class="tab" data-tab="culture">&#9672; Culture</button>
-    <button class="tab" data-tab="questions">? Questions</button>
-    <button class="tab" data-tab="sermon">&#10047; Sermon</button>
-  </div>
-
-  <div id="content">
-    <div class="empty">
-      <div class="empty-icon">&#10022;</div>
-      <p class="empty-verse">Thy word is a lamp unto my feet...</p>
-      <p class="empty-ref">Psalm 119:105</p>
-      <p class="empty-hint">Enter any scripture above and click Study</p>
-    </div>
-  </div>
-
-</div>
-
-<div class="footer">
-  <span>Powered by Claude AI</span>
-  <span id="footerVerse"></span>
-  <span id="footerCount">0/8 sections</span>
-</div>
+<div id="result" style="margin-top:30px; padding:20px; border:1px solid rgba(180,140,60,0.2); border-radius:4px; min-height:60px; line-height:1.8;"></div>
 
 <script>
 var APIKEY = "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;
-var currentTab = "overview";
-var currentVerse = "";
-var cache = {};
 
-function getPrompt(section, verse) {
-  var p = {
-    overview: "You are a biblical scholar. Analyze this scripture: " + verse + ". Provide: 1. **Scripture Text** - Full passage in ESV. 2. **Core Message** - The central truth in 2-3 sentences. 3. **Key Themes** - List 3-5 major themes. 4. **Cross-References** - 4-6 related scriptures with explanation. 5. **Theological Significance** - Why this passage matters doctrinally.",
-    greek: "You are a NT Greek scholar. For this scripture: " + verse + ". Provide: 1. **Original Language** - Greek or Hebrew? 2. **Key Words** - For each key word give the Greek characters, transliteration, Strongs number, literal meaning, and usage elsewhere. 3. **Grammatical Notes** - Verb tenses and cases. 4. **Translation Nuances** - What English misses. 5. **Application** - How Greek deepens understanding. Include actual Greek characters.",
-    hebrew: "You are a Hebrew and Aramaic scholar. For this scripture: " + verse + ". Provide: 1. **Language** - Is this Hebrew, Aramaic, or both? 2. **Original Script** - Key phrases in Hebrew characters. 3. **Word Studies** - For each key word give Hebrew characters, transliteration, Strongs number, root meaning, and full semantic range. 4. **Verb Stems** - Note any Qal Niphal Piel Hiphil forms. 5. **Translation Gaps** - What English cannot capture. Include actual Hebrew characters.",
-    connections: "You are a biblical theologian. For this scripture: " + verse + ". Provide: 1. **Literary Context** - What comes before and after. 2. **Book Connections** - 3-4 other passages in the same book. 3. **OT and NT Bridge** - 4-5 cross-testament references with full explanation. 4. **Typological Links** - Types and shadows. 5. **Thematic Thread** - Genesis to Revelation. 6. **Gospel Connection** - How this points to Jesus. 7. **Doctrinal Web** - What doctrines this touches.",
-    context: "You are a biblical historian. For this scripture: " + verse + ". Provide: 1. **Date and Authorship** 2. **Historical Background** 3. **Political Climate** 4. **Literary Context** 5. **Original Audience** 6. **Archaeological Evidence** 7. **Geography**",
-    culture: "You are an Ancient Near Eastern culture expert. For this scripture: " + verse + ". Provide: 1. **Cultural Setting** 2. **Jewish Customs** 3. **Social Structure** 4. **Economic Context** 5. **Geographic Setting** 6. **Figurative Language** decoded 7. **Honor and Shame Culture** 8. **Modern Misconceptions**",
-    questions: "You are a master Bible teacher. For this scripture: " + verse + ". Create: 1. **Observation Questions** - 4 questions. 2. **Interpretation Questions** - 4 questions. 3. **Application Questions** - 4 questions. 4. **Theological Deep Dives** - 3 questions. 5. **Small Group Discussion** - 4 questions. 6. **Preacher Reflection** - 3 questions.",
-    sermon: "You are a homiletics professor. For this scripture: " + verse + ". Provide: 1. **3 Sermon Outlines** - topical, expository, narrative each with main point and 3 sub-points. 2. **Illustrations** - 3 vivid stories. 3. **Opening Hooks** - 3 options. 4. **Memorable Statements** - 5 one-liners. 5. **Application Points** - 4 modern applications. 6. **Pitfalls** to avoid. 7. **Call to Action** - 3 options."
-  };
-  return p[section] || p.overview;
-}
+document.getElementById("testBtn").onclick = function() {
+  document.getElementById("result").innerHTML = "<span style='color:#b08c3c'>Testing... please wait...</span>";
 
-function showLoading() {
-  document.getElementById("content").innerHTML = "<div class='loading'>&#10022; Searching the ancient texts...</div>";
-}
-
-function showError(msg) {
-  document.getElementById("content").innerHTML = "<div class='error'>Error: " + msg + "</div>";
-}
-
-function renderText(text) {
-  var lines = text.split("\n");
-  var html = "";
-  for (var i = 0; i < lines.length; i++) {
-    var line = lines[i];
-    if (!line.trim()) { html += "<br>"; continue; }
-    var isHeader = /^\d+\.\s\*\*/.test(line) || /^\*\*[^*]+\*\*/.test(line);
-    line = line.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
-    line = line.replace(/\*([^*]+)\*/g, "<em>$1</em>");
-    html += "<p class='" + (isHeader ? "header-line" : "") + "'>" + line + "</p>";
-  }
-  document.getElementById("content").innerHTML = html;
-}
-
-function fetchContent(verse, section) {
-  showLoading();
   var xhr = new XMLHttpRequest();
   xhr.open("POST", "https://api.anthropic.com/v1/messages", true);
   xhr.setRequestHeader("Content-Type", "application/json");
   xhr.setRequestHeader("x-api-key", APIKEY);
   xhr.setRequestHeader("anthropic-version", "2023-06-01");
   xhr.setRequestHeader("anthropic-dangerous-direct-browser-access", "true");
+
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4) {
       if (xhr.status === 200) {
-        try {
-          var data = JSON.parse(xhr.responseText);
-          var text = "";
-          if (data.content) {
-            for (var i = 0; i < data.content.length; i++) {
-              if (data.content[i].text) text += data.content[i].text;
-            }
-          }
-          if (!text) text = "Unable to load. Check your API key and billing at console.anthropic.com";
-          cache[section] = text;
-          renderText(text);
-          updateFooter();
-        } catch(e) {
-          showError("Could not parse response. " + e.message);
-        }
+        document.getElementById("result").innerHTML = "<span style='color:#3fb950; font-size:18px;'>SUCCESS! Your API key works!</span><br><br>" + xhr.responseText.substring(0, 300);
       } else {
-        try {
-          var err = JSON.parse(xhr.responseText);
-          showError(err.error ? err.error.message : "Status " + xhr.status);
-        } catch(e) {
-          showError("Status " + xhr.status);
-        }
+        document.getElementById("result").innerHTML = "<span style='color:#f85149; font-size:16px;'>FAILED - Status " + xhr.status + "</span><br><br>" + xhr.responseText;
       }
     }
   };
+
   xhr.onerror = function() {
-    showError("Network error. Check your internet connection.");
+    document.getElementById("result").innerHTML = "<span style='color:#f85149;'>Network error - cannot reach Anthropic servers</span>";
   };
-  var body = JSON.stringify({
+
+  xhr.send(JSON.stringify({
     model: "claude-sonnet-4-20250514",
-    max_tokens: 1500,
-    messages: [{ role: "user", content: getPrompt(section, verse) }]
-  });
-  xhr.send(body);
-}
-
-function updateFooter() {
-  document.getElementById("footerVerse").textContent = currentVerse ? "Studying: " + currentVerse : "";
-  document.getElementById("footerCount").textContent = Object.keys(cache).length + "/8 sections";
-}
-
-function switchTab(tab) {
-  currentTab = tab;
-  var allTabs = document.querySelectorAll(".tab");
-  for (var i = 0; i < allTabs.length; i++) {
-    allTabs[i].classList.remove("active");
-  }
-  document.querySelector("[data-tab='" + tab + "']").classList.add("active");
-  if (currentVerse) {
-    if (cache[tab]) {
-      renderText(cache[tab]);
-    } else {
-      fetchContent(currentVerse, tab);
-    }
-  }
-}
-
-function study() {
-  var v = document.getElementById("verse").value.trim();
-  if (!v) return;
-  currentVerse = v;
-  cache = {};
-  updateFooter();
-  fetchContent(v, currentTab);
-}
-
-document.getElementById("studyBtn").addEventListener("click", function() {
-  study();
-});
-
-document.getElementById("verse").addEventListener("keydown", function(e) {
-  if (e.key === "Enter") study();
-});
-
-var qvBtns = document.querySelectorAll(".qv");
-for (var i = 0; i < qvBtns.length; i++) {
-  qvBtns[i].addEventListener("click", function() {
-    document.getElementById("verse").value = this.getAttribute("data-verse");
-  });
-}
-
-var tabBtns = document.querySelectorAll(".tab");
-for (var i = 0; i < tabBtns.length; i++) {
-  tabBtns[i].addEventListener("click", function() {
-    switchTab(this.getAttribute("data-tab"));
-  });
-}
+    max_tokens: 50,
+    messages: [{ role: "user", content: "Say hello in 5 words." }]
+  }));
+};
 </script>
 
 </body>
