@@ -2,162 +2,27 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preacher's Study Module</title>
+<title>Test</title>
 </head>
-<body style="background:#0d0b07; color:#e8dcc8; font-family:Georgia,serif; margin:0; padding:20px;">
+<body style="background:#0d0b07; color:#e8dcc8; font-family:Georgia,serif; padding:40px;">
 
-<div style="max-width:900px; margin:0 auto;">
+<h2>Button Test</h2>
+<p id="result" style="color:#b08c3c; margin:20px 0;">Click a button to test...</p>
 
-  <!-- Header -->
-  <div style="border-bottom:1px solid rgba(180,140,60,0.4); padding-bottom:16px; margin-bottom:24px;">
-    <div style="font-size:11px; letter-spacing:4px; color:#b08c3c; text-transform:uppercase;">The Preacher's Lamp</div>
-    <h1 style="font-size:26px; color:#f0e6cc; font-style:italic; margin:6px 0 0;">Scripture Study Module</h1>
-  </div>
-
-  <!-- Search -->
-  <div style="display:flex; gap:10px; margin-bottom:12px;">
-    <input id="verse" type="text" placeholder="Enter scripture e.g. John 3:16"
-      style="flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(180,140,60,0.4); color:#f0e6cc; padding:12px 16px; font-size:16px; font-family:Georgia,serif; font-style:italic; border-radius:4px; outline:none;"
-      onkeydown="if(event.key==='Enter') study()"/>
-    <button onclick="study()"
-      style="background:rgba(176,140,60,0.2); border:1px solid rgba(176,140,60,0.6); color:#c9a84c; padding:12px 24px; font-size:12px; letter-spacing:2px; text-transform:uppercase; font-family:Georgia,serif; border-radius:4px; cursor:pointer;">
-      Study
-    </button>
-  </div>
-
-  <!-- Quick verses -->
-  <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px;">
-    <button onclick="setVerse('John 3:16')" style="background:transparent; border:1px solid rgba(176,140,60,0.25); color:rgba(200,170,100,0.5); padding:4px 12px; font-size:11px; cursor:pointer; border-radius:2px; font-family:Georgia,serif;">John 3:16</button>
-    <button onclick="setVerse('Genesis 1:1')" style="background:transparent; border:1px solid rgba(176,140,60,0.25); color:rgba(200,170,100,0.5); padding:4px 12px; font-size:11px; cursor:pointer; border-radius:2px; font-family:Georgia,serif;">Genesis 1:1</button>
-    <button onclick="setVerse('Psalm 23')" style="background:transparent; border:1px solid rgba(176,140,60,0.25); color:rgba(200,170,100,0.5); padding:4px 12px; font-size:11px; cursor:pointer; border-radius:2px; font-family:Georgia,serif;">Psalm 23</button>
-    <button onclick="setVerse('Isaiah 53:5')" style="background:transparent; border:1px solid rgba(176,140,60,0.25); color:rgba(200,170,100,0.5); padding:4px 12px; font-size:11px; cursor:pointer; border-radius:2px; font-family:Georgia,serif;">Isaiah 53:5</button>
-    <button onclick="setVerse('Romans 8:28')" style="background:transparent; border:1px solid rgba(176,140,60,0.25); color:rgba(200,170,100,0.5); padding:4px 12px; font-size:11px; cursor:pointer; border-radius:2px; font-family:Georgia,serif;">Romans 8:28</button>
-  </div>
-
-  <!-- Tabs -->
-  <div style="display:flex; flex-wrap:wrap; gap:4px; border-bottom:1px solid rgba(180,140,60,0.2); margin-bottom:20px;">
-    <button onclick="setTab('overview')"    id="tab-overview"     style="padding:8px 12px; font-size:11px; letter-spacing:1px; text-transform:uppercase; font-family:Georgia,serif; cursor:pointer; border:none; border-bottom:2px solid #b08c3c; background:rgba(176,140,60,0.15); color:#c9a84c;">✦ Overview</button>
-    <button onclick="setTab('greek')"       id="tab-greek"        style="padding:8px 12px; font-size:11px; letter-spacing:1px; text-transform:uppercase; font-family:Georgia,serif; cursor:pointer; border:none; border-bottom:2px solid transparent; background:transparent; color:rgba(200,170,100,0.45);">α Greek</button>
-    <button onclick="setTab('hebrew')"      id="tab-hebrew"       style="padding:8px 12px; font-size:11px; letter-spacing:1px; text-transform:uppercase; font-family:Georgia,serif; cursor:pointer; border:none; border-bottom:2px solid transparent; background:transparent; color:rgba(200,170,100,0.45);">א Hebrew</button>
-    <button onclick="setTab('connections')" id="tab-connections"  style="padding:8px 12px; font-size:11px; letter-spacing:1px; text-transform:uppercase; font-family:Georgia,serif; cursor:pointer; border:none; border-bottom:2px solid transparent; background:transparent; color:rgba(200,170,100,0.45);">⛓ Connections</button>
-    <button onclick="setTab('context')"     id="tab-context"      style="padding:8px 12px; font-size:11px; letter-spacing:1px; text-transform:uppercase; font-family:Georgia,serif; cursor:pointer; border:none; border-bottom:2px solid transparent; background:transparent; color:rgba(200,170,100,0.45);">⊕ History</button>
-    <button onclick="setTab('culture')"     id="tab-culture"      style="padding:8px 12px; font-size:11px; letter-spacing:1px; text-transform:uppercase; font-family:Georgia,serif; cursor:pointer; border:none; border-bottom:2px solid transparent; background:transparent; color:rgba(200,170,100,0.45);">◈ Culture</button>
-    <button onclick="setTab('questions')"   id="tab-questions"    style="padding:8px 12px; font-size:11px; letter-spacing:1px; text-transform:uppercase; font-family:Georgia,serif; cursor:pointer; border:none; border-bottom:2px solid transparent; background:transparent; color:rgba(200,170,100,0.45);">? Questions</button>
-    <button onclick="setTab('sermon')"      id="tab-sermon"       style="padding:8px 12px; font-size:11px; letter-spacing:1px; text-transform:uppercase; font-family:Georgia,serif; cursor:pointer; border:none; border-bottom:2px solid transparent; background:transparent; color:rgba(200,170,100,0.45);">✿ Sermon</button>
-  </div>
-
-  <!-- Content area -->
-  <div id="content" style="background:rgba(255,255,255,0.02); border:1px solid rgba(180,140,60,0.15); border-radius:4px; padding:28px 32px; min-height:200px; line-height:1.9; font-size:15px; color:#ddd0b8;">
-    <div style="text-align:center; padding:40px 0; opacity:0.5;">
-      <div style="font-size:36px; color:#b08c3c; margin-bottom:12px;">✦</div>
-      <p style="font-style:italic; color:#b08c3c;">"Thy word is a lamp unto my feet..."</p>
-      <p style="font-size:11px; letter-spacing:2px; text-transform:uppercase; color:rgba(176,140,60,0.5); margin-top:4px;">Psalm 119:105</p>
-      <p style="margin-top:20px; font-size:13px; color:rgba(200,170,100,0.4);">Enter any scripture above and click Study</p>
-    </div>
-  </div>
-
-</div>
+<button id="btn1" style="padding:10px 20px; margin:10px; cursor:pointer;">Button 1</button>
+<button id="btn2" style="padding:10px 20px; margin:10px; cursor:pointer;">Button 2</button>
+<button id="btn3" style="padding:10px 20px; margin:10px; cursor:pointer;">Button 3</button>
 
 <script>
-  var API_KEY = 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
-  var currentTab = "overview";
-  var currentVerse = ""  var cache = {};
-
-  var prompts = {
-    overview:    function(v){ return 'You are a biblical scholar. Analyze "'+v+'": 1. **Scripture Text** - Full passage (ESV) 2. **Core Message** - Central truth 3. **Key Themes** - 3-5 themes 4. **Cross-References** - 4-6 scriptures 5. **Theological Significance**'; },
-    greek:       function(v){ return 'You are a NT Greek scholar. For "'+v+'": 1. **Original Language** 2. **Key Words** - Greek word, Strongs number, meaning, usage 3. **Grammatical Notes** 4. **Translation Nuances** 5. **Application**. Include Greek characters like αγαπη.'; },
-    hebrew:      function(v){ return 'You are a Hebrew scholar. For "'+v+'": 1. **Language** - Hebrew or Aramaic? 2. **Original Script** - Key phrases in Hebrew 3. **Word Studies** - Hebrew word, transliteration, Strongs, root meaning 4. **Verb Stems** 5. **Translation Gaps**. Include Hebrew like שלום.'; },
-    connections: function(v){ return 'You are a biblical theologian. For "'+v+'": 1. **Literary Context** 2. **Book Connections** 3. **OT/NT Bridge** - cross-testament refs with explanation 4. **Typological Links** 5. **Thematic Thread** Genesis to Revelation 6. **Gospel Connection** 7. **Doctrinal Web**'; },
-    context:     function(v){ return 'You are a biblical historian. For "'+v+'": 1. **Date and Authorship** 2. **Historical Background** 3. **Political Climate** 4. **Literary Context** 5. **Original Audience** 6. **Archaeological Evidence** 7. **Geography**'; },
-    culture:     function(v){ return 'You are an Ancient Near Eastern expert. For "'+v+'": 1. **Cultural Setting** 2. **Jewish Customs** 3. **Social Structure** 4. **Economic Context** 5. **Geographic Setting** 6. **Figurative Language** 7. **Honor and Shame Culture** 8. **Modern Misconceptions**'; },
-    questions:   function(v){ return 'You are a Bible teacher. For "'+v+'": 1. **Observation** - 4 questions 2. **Interpretation** - 4 questions 3. **Application** - 4 questions 4. **Theological Deep-Dives** - 3 questions 5. **Small Group** - 4 questions 6. **Preacher Reflection** - 3 questions'; },
-    sermon:      function(v){ return 'You are a homiletics professor. For "'+v+'": 1. **3 Sermon Outlines** - topical, expository, narrative 2. **Illustrations** - 3 stories 3. **Opening Hooks** - 3 options 4. **Memorable Statements** - 5 one-liners 5. **Application** - 4 points 6. **Pitfalls** to avoid 7. **Call to Action** - 3 options'; }
-  };
-
-  function setVerse(v) {
-    document.getElementById('verse').value = v;
-  }
-
-  function setTab(tab) {
-    currentTab = tab;
-    var tabs = ['overview','greek','hebrew','connections','context','culture','questions','sermon'];
-    for (var i=0; i<tabs.length; i++) {
-      var btn = document.getElementById('tab-'+tabs[i]);
-      if (tabs[i] === tab) {
-        btn.style.borderBottom = '2px solid #b08c3c';
-        btn.style.background = 'rgba(176,140,60,0.15)';
-        btn.style.color = '#c9a84c';
-      } else {
-        btn.style.borderBottom = '2px solid transparent';
-        btn.style.background = 'transparent';
-        btn.style.color = 'rgba(200,170,100,0.45)';
-      }
-    }
-    if (currentVerse) {
-      if (cache[tab]) {
-        showContent(cache[tab]);
-      } else {
-        fetchContent(currentVerse, tab);
-      }
-    }
-  }
-
-  function study() {
-    var v = document.getElementById('verse').value.trim();
-    if (!v) return;
-    currentVerse = v;
-    cache = {};
-    fetchContent(v, currentTab);
-  }
-
-  function showContent(text) {
-    var lines = text.split('\n');
-    var html = '';
-    for (var i=0; i<lines.length; i++) {
-      var line = lines[i];
-      if (!line.trim()) { html += '<br>'; continue; }
-      line = line.replace(/\*\*([^*]+)\*\*/g, '<strong style="color:#c9a84c">$1</strong>');
-      line = line.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-      var isHeader = lines[i].match(/^\d+\.\s\*\*/) || lines[i].match(/^\*\*[^*]+\*\*/);
-      html += '<p style="margin:'+(isHeader?'16px 0 6px':'4px 0')+'">' + line + '</p>';
-    }
-    document.getElementById('content').innerHTML = html;
-  }
-
-  function fetchContent(verse, section) {
-    document.getElementById('content').innerHTML = '<div style="color:#b08c3c; font-style:italic; padding:20px 0;">✦ Searching the ancient texts...</div>';
-
-    fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1500,
-        messages: [{ role: 'user', content: prompts[section](verse) }]
-      })
-    })
-    .then(function(res){ return res.json(); })
-    .then(function(data){
-      var text = '';
-      if (data.content) {
-        for (var i=0; i<data.content.length; i++) {
-          if (data.content[i].text) text += data.content[i].text;
-        }
-      }
-      if (!text) text = 'Unable to load. Check your API key and billing at console.anthropic.com';
-      cache[section] = text;
-      showContent(text);
-    })
-    .catch(function(err){
-      document.getElementById('content').innerHTML = '<p style="color:#f85149;">Error: ' + err.message + '</p>';
-    });
-  }
+document.getElementById("btn1").onclick = function() {
+  document.getElementById("result").innerText = "Button 1 works!";
+};
+document.getElementById("btn2").onclick = function() {
+  document.getElementById("result").innerText = "Button 2 works!";
+};
+document.getElementById("btn3").onclick = function() {
+  document.getElementById("result").innerText = "Button 3 works!";
+};
 </script>
 
 </body>
